@@ -4,22 +4,32 @@ Ce projet vise a utiliser un réseau de neurone pour créer une IA capable de jo
 
 # 1. Collecte des données
 
-**Récupèrer un grand nombre de parties d'échecs annotées**. Des bases de données PGN (Portable Game Notation) sont disponibles en ligne sur des sites comme Lichess ou Chess.com.
+**Récupèration un grand nombre de parties d'échecs annotées** . Des bases de données PGN (Portable Game Notation) sont disponibles en ligne sur des sites comme Lichess ou Chess.com.
+
+**BDD utilisé (LitChess) :** 
+[132,053,332 chess positions evaluated with Stockfish](https://database.lichess.org/#evals)
+
 --- 
+
 Chaque partie doit inclure :
 - Les positions des pièces à chaque coup.
 
 - Le coup joué à partir de cette position.
 
-- Éventuellement, l'évaluation de la position donnée par un moteur d'échecs (par exemple Stockfish) pour servir de "vérité terrain".
+- l'évaluation de la position donnée par un moteur d'échecs (par exemple Stockfish) pour servir de "vérité terrain".
 
 # 2. Préparer les données
 Convertir les parties du format PGN en un format utilisable par le modèle :
 
----
 ## Format de la Base de Données
 
-La base de données contient des informations sur l'état de l'échiquier à chaque étape d'une partie, ainsi que les coups joués. Voici un exemple de structure de données après traitement des parties d'échecs :
+La base de données contient des informations sur l'état de l'échiquier à chaque étape d'une partie, ainsi que les coups joués. 
+
+Chaque ligne de la base de données correspond à un **coup individuel** joué dans une partie d'échecs, et non à une partie entière. Par exemple, si une partie fait 50 coups, cette partie génèrera 50 lignes dans la base de données.
+
+--- 
+
+Voici un exemple de structure de données après traitement :
 
 | Board_State (8x8 Matrix)                                                                                                                                                                                                                                                                                                                                                                                  | Turn  | Castling | Halfmove Clock | Fullmove Number | Legal Moves           | Best Move      |  
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------|----------|----------------|-----------------|-----------------------|----------------|  
