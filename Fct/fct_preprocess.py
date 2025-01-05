@@ -48,7 +48,6 @@ def most_popular_predict_V1(df):
         .agg(lambda x: x.value_counts().idxmax())  # Trouver le coup le plus fréquent
         .rename("best_move_m2")
     )
-
     # Ajouter cette information dans le DataFrame original
     df = df.merge(most_popular_moves, on='fen', how='left')
     return df
@@ -114,7 +113,7 @@ def fen_to_matrix(fen: str):
 
     return matrix
 
-
+""
 def encode_moves(moves):
     """
     Utilité :

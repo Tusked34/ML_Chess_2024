@@ -1,5 +1,6 @@
 import chess
 import random
+from Fct.fct_preprocess import *
 
 def play_game(ia1, ia2, print_game=True):
     board = chess.Board()  # Plateau initialisé à la position de départ
@@ -67,3 +68,21 @@ def dummy_player(board):
     # Exemple d'IA qui renvoie toujours un coup valide (à adapter selon votre IA)
     legal_moves = list(board.legal_moves)
     return legal_moves[0].uci()  # Prend le premier coup légal (dummy behavior)
+
+def predict_next_move(board, model,move_int_dico):
+    # Obtenir le FEN de l'échiquier
+    fen_code = board.fen()
+    # Convertir le FEN en matrice
+    board_matrix = fen_to_matrix(fen_code)
+    # Ajouter une dimension batch à la matrice pour correspondre à l'entrée du modèle
+    board_matrix = np.expand_dims(board_matrix, axis=0)
+    # Effectuer la prédiction
+    predictions = model.predict(board_matrix)[0]
+
+    # Crée une nouvelle variable qui contient les indices des prédictions triées par probabilité décroissante
+    sorted_indices = np.argsort(predictions)[::-1]  # Trie les indices de predictions de la plus haute à la plus basse
+
+    # Utilise ces indices pour obtenir les coups associés dans l'ordre
+    predicted_moves_sorted = [move_int_dico[idx] for idx in sorted_indices]
+
+    return predicted_moves_sorted
