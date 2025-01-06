@@ -74,8 +74,6 @@ def Chess_IA(board, model, move_int_dico):
     return best_legal_predicted_move
 
 
-
-
 def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
     board = chess.Board()  # Plateau initialisé à la position de départ
     if print_game:
