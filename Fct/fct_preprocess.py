@@ -118,7 +118,7 @@ def drop_usuless_columns(df) :
 
 def fen_to_matrix(fen: str):
     """
-    Convertit une position d'échecs en FEN en une matrice 8x8x12.
+    Convertit une position d'échecs en FEN en une matrice 8x8x13.
     8*8 pour les cases de l'échequier et *12 pour chaque pieces uniques (6 Blanches et 6 Noires)
     
     Parameters: 
