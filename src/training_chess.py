@@ -287,25 +287,28 @@ def play_n_games(ia1, ia2, n):
 
 
 #####  Chargement des Données #####
-data = pd.read_csv('data/data_cleaned.csv' )
+data = pd.read_csv('data\data_cleaned.csv' )
+print("Read CSV OK \n")
 
 X = data['fen']
 y = data['best_move_m1']
+print("Lecture Colonnes OK \n")
 
 ##### Traitement finale des données #####
 
 X = X.apply(fen_to_matrix)
 X = np.array(X.tolist())
+print("Transformation en matrice numpy \n")
 
 # Encode les mouvements et conversion en catégories
 y, move_to_int = encode_moves(y)
 y = to_categorical(y, num_classes=len(move_to_int))
-
+print("Encodage des coups OK \n")
 
 # Sauvegarde de move_to_int dans un fichier JSON
-with open('Models/move_int_dico.json', 'w') as file:
+with open('Models\move_int_dico.json', 'w') as file:
     json.dump(move_to_int, file)
-
+print("Sauvegarde dico coups OK \n")
 
 ##### Definition du modele #####
 model_1 = Sequential([
@@ -319,7 +322,9 @@ model_1 = Sequential([
 model_1.compile(optimizer=Adam(), loss='categorical_crossentropy', metrics=['accuracy'])
 
 model_1.summary()
-
+print("Definition du modele OK \n")
 
 #### Entrainement #####
 model_1.save("Models\Modele_1_TF_25EPOCHS.keras")
+print("Sauvegarde du modele OK \n")
+print("C'EST FINIT !!!!!!! \n")
