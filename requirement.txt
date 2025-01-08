@@ -1,2 +1,6 @@
-chess
-pandas
+Python 3.10.16
+PANDAS 2.2.3
+Tensorflow 2.10.0
+numpy 1.26.4
+json 0.9.6
+chess 1.11.1
