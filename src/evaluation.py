@@ -35,5 +35,7 @@ move_int_dico = {v: k for k, v in move_int.items()}
 play_game(model,"random",move_int_dico,print_game = True)
 
 # Faire jouer plusieurs partie de l'IA contre elle-même ou contre un joueur "random"
+play_multiple_games(model, "random", move_int_dico, 50)
 
 # Faire contre l'IA contre un humain
+play_human_vs_ia(model, move_int_dico, human_color='white')

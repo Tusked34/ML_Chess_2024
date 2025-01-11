@@ -46,7 +46,6 @@ def predict_legal_next_move(board, predicted_moves_sorted):
     return None # Si aucun coup dans la liste n'est légal, retourner None
 
 
-
 def Chess_IA(board, model, move_int_dico):
     """
     Fonction pour jouer un coup au jeu d'échecs en fonction du modèle choisi.
@@ -75,6 +74,25 @@ def Chess_IA(board, model, move_int_dico):
 
 
 def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
+    """
+    Simule une partie d'échecs entre deux modèles d'intelligence artificielle (IA).
+
+    Args:
+        IA_Model_1 (object): Modèle d'IA utilisé pour jouer les coups des Blancs. 
+                             Il doit être compatible avec la fonction `Chess_IA`.
+        IA_Model_2 (object): Modèle d'IA utilisé pour jouer les coups des Noirs. 
+                             Il doit également être compatible avec la fonction `Chess_IA`.
+        move_int_dico (dict): Dictionnaire permettant de traduire ou mapper les mouvements 
+                              entre un format interne et un format UCI (Universal Chess Interface).
+        print_game (bool, optional): Indique si l'état de la partie doit être affiché après chaque coup. 
+                                     Par défaut, cette valeur est définie sur `True`.
+
+    Returns:
+        str: Le résultat de la partie selon la notation standard de la bibliothèque `python-chess` :
+             - "1-0" : Les Blancs gagnent.
+             - "0-1" : Les Noirs gagnent.
+             - "1/2-1/2" : Partie nulle.
+    """
     board = chess.Board()  # Plateau initialisé à la position de départ
     if print_game:
         print("Début de la partie !")
@@ -83,8 +101,10 @@ def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
     while not board.is_game_over():  # Tant que la partie n'est pas terminée
         if board.turn:  # Blancs
             move = Chess_IA(board, IA_Model_1, move_int_dico)
+            print(move)
         else:  # Noirs
             move = Chess_IA(board, IA_Model_2, move_int_dico)
+            print(move)
 
         # Convertir le coup en objet Move et jouer
         move_obj = chess.Move.from_uci(move)
@@ -102,33 +122,97 @@ def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
     return board.result()
 
 
-def play_n_games(ia1, ia2, n):
-    # Initialisation des compteurs pour les résultats
-    ia1_wins = 0
-    ia2_wins = 0
-    draws = 0
+def play_multiple_games(IA_Model_1, IA_Model_2, move_int_dico, num_games):
+    """
+    Joue N parties d'échecs entre deux IA et retourne les résultats cumulés.
 
-    for i in range(n):
-        print(f"\nPartie {i+1}:")
-        
-        # Alterner les couleurs à chaque partie
+    Parameters:
+    - IA_Model_1: Modèle IA pour le joueur 1.
+    - IA_Model_2: Modèle IA pour le joueur 2.
+    - move_int_dico: Dictionnaire pour les coups.
+    - num_games: Nombre de parties à jouer.
+
+    Returns:
+    - Un dictionnaire contenant les résultats cumulés.
+    """
+    results = {"Joueur 1": 0, "Joueur 2": 0, "Draws": 0}
+
+    for i in range(num_games):
         if i % 2 == 0:
-            # Partie où ia1 joue avec les blancs et ia2 avec les noirs
-            result = play_game(ia1, ia2, print_game=False)
+            result = play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=False)
         else:
-            # Partie où ia2 joue avec les blancs et ia1 avec les noirs
-            result = play_game(ia2, ia1, print_game=False)
+            # Inverser les modèles pour alterner les couleurs
+            result = play_game(IA_Model_2, IA_Model_1, move_int_dico, print_game=False)
 
-        # Analyser le résultat de la partie
+        print(f"Partie {i + 1} : Résultat = {result}")
+
         if result == "1-0":
-            ia1_wins += 1
+            if i % 2 == 0:
+                results["Joueur 1"] += 1
+            else:
+                results["Joueur 2"] += 1
         elif result == "0-1":
-            ia2_wins += 1
+            if i % 2 == 0:
+                results["Joueur 2"] += 1
+            else:
+                results["Joueur 1"] += 1
         else:
-            draws += 1
+            results["Draws"] += 1
 
-    # Résultat final
-    print("\nRésultats finaux:")
-    print(f"Victoires de l'IA n°1 : {ia1_wins}")
-    print(f"Victoires de l'IA n°2 : {ia2_wins}")
-    print(f"Égalités : {draws}")
+    print("\nRésultats finaux :")
+    print(f"Joueur 1 gagne : {results['Joueur 1']} parties")
+    print(f"Joueur 2 gagne : {results['Joueur 2']} parties")
+    print(f"Parties nulles : {results['Draws']} parties")
+
+    return results
+
+
+def play_human_vs_ia(IA_Model, move_int_dico, human_color='white', print_game=True):
+    """
+    Fonction pour jouer une partie contre une IA.
+    
+    Args:
+        IA_Model: Modèle IA pour l'adversaire.
+        move_int_dico: Dictionnaire pour convertir les coups.
+        human_color: 'white' ou 'black' pour choisir la couleur du joueur humain.
+        print_game: bool, afficher ou non le plateau après chaque coup.
+
+    Returns:
+        str: Résultat de la partie ("1-0", "0-1", "1/2-1/2").
+    """
+    board = chess.Board()  # Initialisation du plateau
+    is_human_white = human_color.lower() == 'white'
+
+    if print_game:
+        print("Début de la partie !")
+        print(board)
+
+    while not board.is_game_over():
+        if board.turn:  # Tour des blancs
+            if is_human_white:  # Humain joue les blancs
+                move = str(input("Votre coup (notation UCI, ex : e2e4) : "))
+            else:  # IA joue les blancs
+                move = Chess_IA(board, IA_Model, move_int_dico)
+                print(f"\nl'IA joue : {move}\n")
+
+        else:  # Tour des noirs
+            if not is_human_white:  # Humain joue les noirs
+                move = str(input("Votre coup (notation UCI, ex : e7e5) : "))
+            else:  # IA joue les noirs
+                move = Chess_IA(board, IA_Model, move_int_dico)
+                print(f"\nl'IA joue : {move}\n")
+
+        # Convertir le coup en objet Move et jouer
+        move_obj = chess.Move.from_uci(move)
+        if move_obj in board.legal_moves:
+            board.push(move_obj)
+        else:
+            print(f"Erreur : coup illégal {move}")
+            continue
+
+        if print_game:
+            print(board, "\n")
+
+    print(f"Résultat : {board.result()}")
+
+    return board.result()
