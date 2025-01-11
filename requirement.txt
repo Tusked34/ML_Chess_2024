@@ -1,3 +1,4 @@
+# Principaux packages :
 Python 3.10.16
 PANDAS 2.2.3
 Tensorflow 2.10.0
