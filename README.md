@@ -1,46 +1,52 @@
 # ML_Chess_2024
 
-Ce projet vise à utiliser un réseau de neurone pour créer une IA capable de jouer aux échecs de manière pertinente et qui se rapproche d'un niveau avancé
+Ce projet vise à utiliser un réseau de neurone pour créer une IA capable de jouer aux échecs de manière pertinente et avancé.
 
 ## Structure du répertoire GIT 
 
 ```bash
 C:.
 │   .gitignore
-│   environnementMargaux.yml
+│   environnementMargaux.yml #Fichiers de l'environnement a configuré
+│   Projet_Chess.ipynb # Notebook du projet
 │   README.md
 │   requirement.txt
 │   Test_Djib.ipynb
 │   Test_Theo copy.ipynb
 │   Test_Theo.ipynb
 │
-├───data #jeux de données 
-│       data_cleaned.csv #jeux de données récupérées à l'issue de la fonction preprocess
-│       lichess_db_eval.jsonl # jeux de données de départ
+├───data
+│       data_cleaned_1000000_rows.csv #Data cleaned contenant 1 000 000 de lignes
+│       lichess_db_eval.jsonl #Base de données de départ contient 40 gigas de données sur les positionnements d'echecs
 │
 ├───Fct
 │   │   fct_eval.py #Fonction d'évaluation du modèle
-│   │   fct_preprocess.py #Fonctions de récupération du data clean
+│   │   fct_preprocess.py #Fonction qui permet de créer le fichier data_cleaned
 │   │   __init__
 │   │
 │   └───__pycache__
-│           fct_eval.cpython-310.pyc 
+│           fct_eval.cpython-310.pyc
 │           fct_eval.cpython-312.pyc
 │           fct_preprocess.cpython-310.pyc
 │           fct_preprocess.cpython-312.pyc
 │
+├───Games_Gif
+│       Djib(White)_vs_Model2(Black).gif # Première partie réalisé contre une version de l'IA
+│
 ├───Models
-│       Modele_1_TF_25EPOCHS.keras 
-│       Modele_2_TF_25EPOCHS.keras
-│       Modele_3_TF_25EPOCHS.keras
-│       move_int_dico.json
+│       Modele_1_TF_25EPOCHS.keras #Première proposition d'un modèle 
+│       Modele_2_TF_50EPOCHS_1M.keras #Deuxième proposition d'un modèle plus avancé
+│       move_int_dico.json #Fichier qui permet de répertorié la liste des mouvements possibles à l'issue de l'entrainement du premier modèle
+│       move_int_dico_1.json #Fichier qui permet de répertorié la liste des mouvements possibles à l'issue de l'entrainement du deuxième modèle
 │
 └───src
+        evaluation.py
+        pre_process.py
         training_chess.py
 ```
 
 ## Prérequis
-Charger un evironnement Anaconda à partir du fichier environnementMargaux.yml
+Charger un evironnement Anaconda à partir du fichier **environnementMargaux.yml**
 Détail des packages :
 ```bash
 channels:
@@ -195,7 +201,8 @@ dependencies:
       - json5==0.9.6
 ```
 
-## Lien du repository
+## Initialisation du repository
+
 ```bash
 git clone https://github.com/Tusked34/ML_Chess_2024
 ```
@@ -204,16 +211,16 @@ git clone https://github.com/Tusked34/ML_Chess_2024
 
 1. Prétraiter les données :
 ```bash
-
+pyhton src/pre_process.py
 ```
 2. Entraîner le modèle :
 ```bash
-
+pyhton src/training_chess.py
 ```
 
 3. Évaluer les performances du modèle :
 ```bash
-
+pyhton src/evaluation.py
 ```
 
 4. Jouer contre l'IA
