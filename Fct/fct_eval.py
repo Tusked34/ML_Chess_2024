@@ -101,13 +101,18 @@ def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
     while not board.is_game_over():  # Tant que la partie n'est pas terminée
         if board.turn:  # Blancs
             move = Chess_IA(board, IA_Model_1, move_int_dico)
-            print(move)
+            print(f"Blancs jouent : {move}")
         else:  # Noirs
             move = Chess_IA(board, IA_Model_2, move_int_dico)
-            print(move)
+            print(f"Noirs jouent : {move}")
 
-        # Convertir le coup en objet Move et jouer
+        # Ajouter la promotion si nécessaire
         move_obj = chess.Move.from_uci(move)
+        if move_obj.promotion is None and board.is_legal(move_obj) and board.is_pseudo_legal(move_obj):
+            # Si le coup est une promotion, ajouter la promotion par défaut à la reine
+            if board.piece_at(move_obj.from_square).piece_type == chess.PAWN and chess.square_rank(move_obj.to_square) in [0, 7]:
+                move_obj.promotion = chess.QUEEN  # Promotion par défaut en reine
+
         if move_obj in board.legal_moves:
             board.push(move_obj)
         else:
@@ -118,7 +123,6 @@ def play_game(IA_Model_1, IA_Model_2, move_int_dico, print_game=True):
             print(board, "\n")
 
     print(f"Résultat : {board.result()}")
-    
     return board.result()
 
 

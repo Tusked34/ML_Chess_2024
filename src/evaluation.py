@@ -21,10 +21,10 @@ from tensorflow.keras.optimizers import Adam
 ### Chargement des données ###
 ##############################
 # Chargement du modèle
-model = load_model("Models\Modele_1_TF_25EPOCHS.keras")
+model = load_model("Models/Modele_V4.keras")
 
 # Chargement du dictionnaire de traduction coup / integer pour faire la traduction entre le model et le chess.board
-with open('Models/move_int_dico.json', 'r') as file:
+with open('Models/move_int_dico_v4.json', 'r') as file:
     move_int = json.load(file)
 move_int_dico = {v: k for k, v in move_int.items()}
 
@@ -35,7 +35,7 @@ move_int_dico = {v: k for k, v in move_int.items()}
 play_game(model,"random",move_int_dico,print_game = True)
 
 # Faire jouer plusieurs partie de l'IA contre elle-même ou contre un joueur "random"
-play_multiple_games(model, "random", move_int_dico, 50)
+#play_multiple_games(model, "random", move_int_dico, 50)
 
 # Faire contre l'IA contre un humain
-play_human_vs_ia(model, move_int_dico, human_color='white')
+#play_human_vs_ia(model, move_int_dico, human_color='white')
